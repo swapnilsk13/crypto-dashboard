@@ -46,8 +46,6 @@ const CryptoChart = () => {
  };
 
   // Retrieve data from Redux store
-  const cryptoList = useSelector((state) => state.cryptoList);
-  console.log("mmmmmmmmm", cryptoList);
   const chartData = useSelector((state) => state.chartData.chartData);
 
   // Render the selected chart type
