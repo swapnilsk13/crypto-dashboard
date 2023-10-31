@@ -3,15 +3,19 @@ import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 import { Pie } from "react-chartjs-2";
 import ChartDataLabels from "chartjs-plugin-datalabels";
 
+// Register Chart.js elements and plugins
 ChartJS.register(ArcElement, Tooltip, Legend, ChartDataLabels);
-const style={
-  letterSpacing:'1px'
-}
+
+const style = {
+  letterSpacing: "1px",
+};
+
 const CryptoPieChart = () => {
   return (
-    <div className="container shadow-md border rounded-md w-3/3   bg-white h-64 top-2 relative mb-5">
-      <div className="relative top-4 ">
-        <h1 style={style} className="text-black font-bold  text-xl px-5">
+    <div className="container shadow-md border rounded-md w-3/3 bg-white h-64 top-2 relative mb-5">
+      <div className="relative top-4">
+        {/* Title */}
+        <h1 style={style} className="text-black font-bold text-xl px-5">
           PortFolio
         </h1>
       </div>
@@ -26,13 +30,13 @@ const CryptoPieChart = () => {
                 data: [250, 400, 350],
                 backgroundColor: [
                   "#14C38E",
-                  "rgb(25, 38, 85)",
-                  "rgb(56, 118, 191)",
+                  "rgb(225, 152, 152)",
+                  "rgb(162, 103, 138)",
                 ],
                 borderColor: [
                   "#14C38E",
-                  "rgb(225, 170, 116)",
-                  "rgb(255, 99, 132)",
+                  "rgb(225, 152, 152)",
+                  "rgb(162, 103, 138)",
                 ],
                 borderWidth: 1,
               },

@@ -1,28 +1,35 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import { useDispatch, useSelector } from 'react-redux';
-import { fetchCryptoDataSuccess, fetchCryptoDataFailure } from '../redux/action/sidebarAction';
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  fetchCryptoDataSuccess,
+  fetchCryptoDataFailure,
+} from "../redux/action/sidebarAction";
 
 const Sidebar = ({ selectedCurrency }) => {
+  // State variables to manage cryptocurrency list and Redux related variables
   const [cryptoList, setCryptoList] = useState([]);
   const dispatch = useDispatch();
   const cryptoData = useSelector((state) => state.cryptoList);
 
   useEffect(() => {
+    // Function to fetch cryptocurrency data based on the selected currency
     const fetchCryptoData = (currency) => {
       axios
-        .get('https://api.coingecko.com/api/v3/coins/markets', {
+        .get("https://api.coingecko.com/api/v3/coins/markets", {
           params: {
             vs_currency: currency,
-            order: 'market_cap_desc',
+            order: "market_cap_desc",
             per_page: 1000,
             page: 1,
           },
         })
         .then((response) => {
+          // Process the response data to include additional information
           const updatedCryptoList = response.data.map((crypto) => {
-            const dailyPriceChange = ((crypto.current_price - crypto.low_24h) / crypto.low_24h) * 100;
-            const priceChangeDirection = dailyPriceChange >= 0 ? 'up' : 'down';
+            const dailyPriceChange =
+              ((crypto.current_price - crypto.low_24h) / crypto.low_24h) * 100;
+            const priceChangeDirection = dailyPriceChange >= 0 ? "up" : "down";
 
             return {
               ...crypto,
@@ -30,21 +37,25 @@ const Sidebar = ({ selectedCurrency }) => {
               priceChangeDirection,
             };
           });
+          // Update the local state and dispatch success action to Redux
           setCryptoList(updatedCryptoList);
           dispatch(fetchCryptoDataSuccess(updatedCryptoList));
         })
         .catch((error) => {
-          console.error('Error fetching data:', error);
+          console.error("Error fetching data:", error);
+          // Dispatch failure action in case of an error
           dispatch(fetchCryptoDataFailure(error));
         });
     };
 
+    // Fetch cryptocurrency data when selected currency or dispatch change
     fetchCryptoData(selectedCurrency);
   }, [selectedCurrency, dispatch]);
 
+  // Function to format currency values
   const formatCurrency = (value, currency) => {
-    const formatter = new Intl.NumberFormat('en-US', {
-      style: 'currency',
+    const formatter = new Intl.NumberFormat("en-US", {
+      style: "currency",
       currency,
     });
     return formatter.format(value);

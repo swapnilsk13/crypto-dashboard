@@ -19,9 +19,13 @@ import {
 
 const CryptoChart = () => {
   const dispatch = useDispatch();
+
+  // State variables for currency selection, time interval, and chart type
   const [currency, setCurrency] = useState("bitcoin");
   const [timeInterval, setTimeInterval] = useState("1d");
   const [chartType, setChartType] = useState("line");
+
+  // Array of available time intervals
   const timeIntervals = [
     { value: "1d", label: "1D" },
     { value: "7d", label: "1W" },
@@ -30,19 +34,23 @@ const CryptoChart = () => {
     { value: "365d", label: "1Y" },
   ];
 
+  // Fetch chart data when currency or time interval changes
   useEffect(() => {
     fetchData(currency, timeInterval);
   }, [currency, timeInterval]);
 
-  const fetchData = (selectedCurrency, selectedTimeInterval) => {
-    dispatch(fetchChartData(selectedCurrency, selectedTimeInterval));
+  // Function to fetch chart data
+ const fetchData = (selectedCurrency, selectedTimeInterval) => {
+   dispatch(fetchChartData(selectedCurrency, selectedTimeInterval));
+   console.log(selectedCurrency, selectedTimeInterval);
+ };
 
-    console.log(selectedCurrency, selectedTimeInterval);
-  };
+  // Retrieve data from Redux store
   const cryptoList = useSelector((state) => state.cryptoList);
-  console.log("mmmmmmmmm",cryptoList)
+  console.log("mmmmmmmmm", cryptoList);
   const chartData = useSelector((state) => state.chartData.chartData);
 
+  // Render the selected chart type
   const renderChart = () => {
     if (!Array.isArray(chartData) || chartData.length === 0) {
       return <div>No data available.</div>;
@@ -70,7 +78,8 @@ const CryptoChart = () => {
         return (
           <BarChart data={chartData}>
             <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="date" /> <YAxis />
+            <XAxis dataKey="date" />
+            <YAxis />
             <Tooltip />
             <Legend />
             <Bar dataKey="price" fill="rgb(214, 232, 219)" />
@@ -82,7 +91,8 @@ const CryptoChart = () => {
           <AreaChart data={chartData}>
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis dataKey="date" />
-            <YAxis /> <Tooltip />
+            <YAxis />
+            <Tooltip />
             <Legend />
             <Area type="monotone" dataKey="price" fill="rgb(73, 94, 87)" />
           </AreaChart>
@@ -95,15 +105,14 @@ const CryptoChart = () => {
 
   return (
     <>
-      {" "}
-      <div className="border shadow-md border-r-1 rounded-md  bg-white  ml-1   ">
-        <div className="  md:flex sm:cols-2 sm:gap-10 ">
-          <div className=" pt-4 ml-20">
+      <div className="border shadow-md border-r-1 rounded-md bg-white ml-1 ">
+        <div className="md:flex sm:cols-2 sm:gap-10 ">
+          <div className="pt-4 ml-20">
             {timeIntervals.map((interval) => (
               <button
                 key={interval.value}
                 onClick={() => setTimeInterval(interval.value)}
-                className={`ring-1 ring-gray-200 bg-black-100 px-4 py-1 rounded-md  mx-3 mr-2 mt-1 mb-1 pb-1.5 ${
+                className={`ring-1 ring-gray-200 bg-black-100 px-4 py-1 rounded-md mx-3 mr-2 mt-1 mb-1 pb-1.5 ${
                   timeInterval === interval.value
                     ? "bg-blue-500 text-white"
                     : "text-gray-700"
@@ -115,8 +124,9 @@ const CryptoChart = () => {
           </div>
           <div
             style={{ justifyContent: "flex-end" }}
-            className="sm:col-span-2 flex justify-end  right-24 gap-2 my-4  align-sub"
+            className="sm:col-span-2 flex justify-end right-24 gap-2 my-4 align-sub"
           >
+            {/* Dropdown to select the currency */}
             <select
               value={currency}
               onChange={(e) => setCurrency(e.target.value)}
@@ -128,6 +138,7 @@ const CryptoChart = () => {
               <option value="ripple">Ripple</option>
             </select>
 
+            {/* Dropdown to select the chart type */}
             <select
               className="ring-1 ring-gray-200 bg-gray-100 rounded focus:outline-none px-2 py-2 font-semibold"
               value={chartType}
@@ -140,10 +151,7 @@ const CryptoChart = () => {
           </div>
         </div>
 
-        <div
-          style={{ width: "100%", height: 270 }}
-          className="relative bottom-9 h-60 top-1"
-        >
+        <div style={{ width: "100%", height: 270 }} className="relative bottom-9 h-60 top-1">
           <ResponsiveContainer>{renderChart()}</ResponsiveContainer>
         </div>
       </div>
